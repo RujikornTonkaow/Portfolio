@@ -4,7 +4,7 @@ const currentYear = new Date().getFullYear()
 </script>
 
 <template>
-  <footer class="border-t border-white/5 bg-surface-950">
+  <footer class="border-t border-th-edge/5 bg-th-bg">
     <div class="section-container py-12">
       <div class="flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="text-center md:text-left">
@@ -14,7 +14,7 @@ const currentYear = new Date().getFullYear()
           >
             Portfolio
           </a>
-          <p class="text-sm text-surface-500 mt-1">
+          <p class="text-sm text-th-subtle mt-1">
             Crafting digital experiences
           </p>
         </div>
@@ -26,7 +26,7 @@ const currentYear = new Date().getFullYear()
             :href="link.url"
             target="_blank"
             rel="noopener noreferrer"
-            class="p-2 text-surface-500 hover:text-primary-400 transition-colors duration-200"
+            class="p-2 text-th-subtle hover:text-th-accent transition-colors duration-200"
             :aria-label="link.name"
           >
             <Icon
@@ -36,7 +36,7 @@ const currentYear = new Date().getFullYear()
           </a>
         </div>
 
-        <p class="text-sm text-surface-600">
+        <p class="text-sm text-th-faint">
           &copy; {{ currentYear }} All rights reserved.
         </p>
       </div>

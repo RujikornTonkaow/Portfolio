@@ -22,14 +22,14 @@ const filteredSkills = computed(() => {
 <template>
   <section
     id="skills"
-    class="section-padding bg-surface-900/30"
+    class="section-padding bg-th-bg-alt"
   >
     <div class="section-container">
       <div class="text-center mb-14">
-        <p class="text-primary-400 font-mono text-sm tracking-wider mb-3">
+        <p class="text-th-accent font-mono text-sm tracking-wider mb-3">
           Skills & Tools
         </p>
-        <h2 class="text-3xl md:text-4xl font-bold text-white">
+        <h2 class="text-3xl md:text-4xl font-bold text-th-fg">
           Technologies I
           <span class="gradient-text">work with</span>
         </h2>
@@ -41,8 +41,8 @@ const filteredSkills = computed(() => {
           :key="cat.key"
           class="px-5 py-2 text-sm font-medium rounded-full transition-all duration-200"
           :class="activeCategory === cat.key
-            ? 'bg-primary-600 text-white shadow-lg shadow-primary-500/25'
-            : 'bg-white/5 text-surface-400 hover:text-white hover:bg-white/10 border border-white/5'"
+            ? 'bg-th-btn text-white shadow-lg shadow-th-btn/25'
+            : 'bg-th-overlay/5 text-th-muted hover:text-th-fg hover:bg-th-overlay/10 border border-th-edge/5'"
           @click="activeCategory = cat.key"
         >
           {{ cat.label }}
@@ -60,7 +60,7 @@ const filteredSkills = computed(() => {
             size="36"
             class="group-hover:scale-110 transition-transform duration-300"
           />
-          <span class="text-sm text-surface-300 font-medium">
+          <span class="text-sm text-th-body font-medium">
             {{ skill.name }}
           </span>
         </div>

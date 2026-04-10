@@ -15,6 +15,11 @@ export default defineNuxtConfig({
       meta: [
         { name: 'description', content: 'Personal Portfolio Website' },
       ],
+      script: [
+        {
+          innerHTML: `(function(){try{var t=localStorage.getItem('portfolio-theme');document.documentElement.classList.add(t==='sunshine'?'sunshine':'midnight')}catch(e){document.documentElement.classList.add('midnight')}})()`,
+        },
+      ],
       link: [
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },

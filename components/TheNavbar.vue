@@ -25,7 +25,7 @@ onUnmounted(() => {
   <nav
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
     :class="isScrolled
-      ? 'bg-surface-950/80 backdrop-blur-xl border-b border-white/5 shadow-lg shadow-black/10'
+      ? 'bg-th-bg/80 backdrop-blur-xl border-b border-th-edge/5 shadow-lg shadow-black/10'
       : 'bg-transparent'"
   >
     <div class="section-container">
@@ -42,22 +42,26 @@ onUnmounted(() => {
             v-for="item in navItems"
             :key="item.href"
             :href="item.href"
-            class="px-4 py-2 text-sm text-surface-400 hover:text-white rounded-lg transition-colors duration-200 hover:bg-white/5"
+            class="px-4 py-2 text-sm text-th-muted hover:text-th-fg rounded-lg transition-colors duration-200 hover:bg-th-overlay/5"
           >
             {{ item.label }}
           </a>
+          <ThemeToggle />
         </div>
 
-        <button
-          class="md:hidden p-2 text-surface-400 hover:text-white transition-colors"
-          :aria-label="isMobileMenuOpen ? 'Close menu' : 'Open menu'"
-          @click="isMobileMenuOpen = !isMobileMenuOpen"
-        >
-          <Icon
-            :name="isMobileMenuOpen ? 'mdi:close' : 'mdi:menu'"
-            size="24"
-          />
-        </button>
+        <div class="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
+          <button
+            class="p-2 text-th-muted hover:text-th-fg transition-colors"
+            :aria-label="isMobileMenuOpen ? 'Close menu' : 'Open menu'"
+            @click="isMobileMenuOpen = !isMobileMenuOpen"
+          >
+            <Icon
+              :name="isMobileMenuOpen ? 'mdi:close' : 'mdi:menu'"
+              size="24"
+            />
+          </button>
+        </div>
       </div>
     </div>
 
@@ -71,14 +75,14 @@ onUnmounted(() => {
     >
       <div
         v-if="isMobileMenuOpen"
-        class="md:hidden bg-surface-900/95 backdrop-blur-xl border-b border-white/5"
+        class="md:hidden bg-th-bg/95 backdrop-blur-xl border-b border-th-edge/5"
       >
         <div class="section-container py-4 flex flex-col gap-1">
           <a
             v-for="item in navItems"
             :key="item.href"
             :href="item.href"
-            class="px-4 py-3 text-surface-300 hover:text-white rounded-lg transition-colors hover:bg-white/5"
+            class="px-4 py-3 text-th-body hover:text-th-fg rounded-lg transition-colors hover:bg-th-overlay/5"
             @click="closeMobileMenu"
           >
             {{ item.label }}

@@ -13,14 +13,14 @@ const { socialLinks } = usePortfolioData()
 
     <div class="section-container relative z-10">
       <div class="text-center mb-14">
-        <p class="text-primary-400 font-mono text-sm tracking-wider mb-3">
+        <p class="text-th-accent font-mono text-sm tracking-wider mb-3">
           Contact
         </p>
-        <h2 class="text-3xl md:text-4xl font-bold text-white">
+        <h2 class="text-3xl md:text-4xl font-bold text-th-fg">
           Let's work
           <span class="gradient-text">together</span>
         </h2>
-        <p class="mt-4 text-surface-400 max-w-lg mx-auto">
+        <p class="mt-4 text-th-muted max-w-lg mx-auto">
           Have a project in mind or want to discuss opportunities?
           I'd love to hear from you.
         </p>
@@ -36,7 +36,7 @@ const { socialLinks } = usePortfolioData()
               <div>
                 <label
                   for="name"
-                  class="block text-sm font-medium text-surface-300 mb-2"
+                  class="block text-sm font-medium text-th-body mb-2"
                 >
                   Name
                 </label>
@@ -44,13 +44,13 @@ const { socialLinks } = usePortfolioData()
                   id="name"
                   type="text"
                   placeholder="John Doe"
-                  class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-surface-600 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-colors"
+                  class="w-full px-4 py-3 bg-th-overlay/5 border border-th-edge/10 rounded-xl text-th-fg placeholder:text-th-faint focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-colors"
                 >
               </div>
               <div>
                 <label
                   for="email"
-                  class="block text-sm font-medium text-surface-300 mb-2"
+                  class="block text-sm font-medium text-th-body mb-2"
                 >
                   Email
                 </label>
@@ -58,7 +58,7 @@ const { socialLinks } = usePortfolioData()
                   id="email"
                   type="email"
                   placeholder="john@example.com"
-                  class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-surface-600 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-colors"
+                  class="w-full px-4 py-3 bg-th-overlay/5 border border-th-edge/10 rounded-xl text-th-fg placeholder:text-th-faint focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-colors"
                 >
               </div>
             </div>
@@ -66,7 +66,7 @@ const { socialLinks } = usePortfolioData()
             <div>
               <label
                 for="subject"
-                class="block text-sm font-medium text-surface-300 mb-2"
+                class="block text-sm font-medium text-th-body mb-2"
               >
                 Subject
               </label>
@@ -74,14 +74,14 @@ const { socialLinks } = usePortfolioData()
                 id="subject"
                 type="text"
                 placeholder="Project Discussion"
-                class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-surface-600 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-colors"
+                class="w-full px-4 py-3 bg-th-overlay/5 border border-th-edge/10 rounded-xl text-th-fg placeholder:text-th-faint focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-colors"
               >
             </div>
 
             <div>
               <label
                 for="message"
-                class="block text-sm font-medium text-surface-300 mb-2"
+                class="block text-sm font-medium text-th-body mb-2"
               >
                 Message
               </label>
@@ -89,13 +89,13 @@ const { socialLinks } = usePortfolioData()
                 id="message"
                 rows="5"
                 placeholder="Tell me about your project..."
-                class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-surface-600 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-colors resize-none"
+                class="w-full px-4 py-3 bg-th-overlay/5 border border-th-edge/10 rounded-xl text-th-fg placeholder:text-th-faint focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-colors resize-none"
               />
             </div>
 
             <button
               type="submit"
-              class="w-full px-8 py-3.5 bg-primary-600 hover:bg-primary-500 text-white font-medium rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-primary-500/25 hover:-translate-y-0.5"
+              class="w-full px-8 py-3.5 bg-th-btn hover:bg-th-btn-hover text-white font-medium rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-th-btn/25 hover:-translate-y-0.5"
             >
               Send Message
             </button>
@@ -109,7 +109,7 @@ const { socialLinks } = usePortfolioData()
             :href="link.url"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex items-center gap-2 text-surface-400 hover:text-primary-400 transition-colors duration-200"
+            class="flex items-center gap-2 text-th-muted hover:text-th-accent transition-colors duration-200"
             :aria-label="link.name"
           >
             <Icon

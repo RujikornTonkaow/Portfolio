@@ -9,7 +9,6 @@ export default {
     './plugins/**/*.ts',
     './app.vue',
   ],
-  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
@@ -42,6 +41,27 @@ export default {
           800: '#1e293b',
           900: '#0f172a',
           950: '#020617',
+        },
+        th: {
+          bg: 'rgb(var(--t-bg) / <alpha-value>)',
+          'bg-alt': 'rgb(var(--t-bg-alt) / <alpha-value>)',
+          'bg-el': 'rgb(var(--t-bg-el) / <alpha-value>)',
+          fg: 'rgb(var(--t-fg) / <alpha-value>)',
+          body: 'rgb(var(--t-body) / <alpha-value>)',
+          muted: 'rgb(var(--t-muted) / <alpha-value>)',
+          subtle: 'rgb(var(--t-subtle) / <alpha-value>)',
+          faint: 'rgb(var(--t-faint) / <alpha-value>)',
+          overlay: 'rgb(var(--t-overlay) / <alpha-value>)',
+          edge: 'rgb(var(--t-edge) / <alpha-value>)',
+          accent: 'rgb(var(--t-accent) / <alpha-value>)',
+          'accent-soft': 'rgb(var(--t-accent-soft) / <alpha-value>)',
+          'accent-cyan': 'rgb(var(--t-accent-cyan) / <alpha-value>)',
+          'accent-violet': 'rgb(var(--t-accent-violet) / <alpha-value>)',
+          'ring-from': 'rgb(var(--t-ring-from) / <alpha-value>)',
+          'ring-via': 'rgb(var(--t-ring-via) / <alpha-value>)',
+          'ring-to': 'rgb(var(--t-ring-to) / <alpha-value>)',
+          btn: 'rgb(var(--t-btn) / <alpha-value>)',
+          'btn-hover': 'rgb(var(--t-btn-hover) / <alpha-value>)',
         },
       },
       animation: {

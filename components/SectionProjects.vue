@@ -9,10 +9,10 @@ const { projects } = usePortfolioData()
   >
     <div class="section-container">
       <div class="text-center mb-14">
-        <p class="text-primary-400 font-mono text-sm tracking-wider mb-3">
+        <p class="text-th-accent font-mono text-sm tracking-wider mb-3">
           Portfolio
         </p>
-        <h2 class="text-3xl md:text-4xl font-bold text-white">
+        <h2 class="text-3xl md:text-4xl font-bold text-th-fg">
           Featured
           <span class="gradient-text">Projects</span>
         </h2>
@@ -24,19 +24,19 @@ const { projects } = usePortfolioData()
           :key="project.title"
           class="glass-card overflow-hidden group hover:border-primary-500/20 transition-all duration-300"
         >
-          <div class="h-48 bg-gradient-to-br from-primary-500/20 via-surface-800 to-cyan-500/20 flex items-center justify-center">
+          <div class="h-48 bg-gradient-to-br from-primary-500/20 via-th-bg-el to-cyan-500/20 flex items-center justify-center">
             <Icon
               name="mdi:code-braces"
               size="48"
-              class="text-surface-600 group-hover:text-primary-400 group-hover:scale-110 transition-all duration-300"
+              class="text-th-faint group-hover:text-th-accent group-hover:scale-110 transition-all duration-300"
             />
           </div>
 
           <div class="p-6">
-            <h3 class="text-xl font-semibold text-white mb-2 group-hover:text-primary-300 transition-colors">
+            <h3 class="text-xl font-semibold text-th-fg mb-2 group-hover:text-th-accent-soft transition-colors">
               {{ project.title }}
             </h3>
-            <p class="text-surface-400 text-sm leading-relaxed mb-4">
+            <p class="text-th-muted text-sm leading-relaxed mb-4">
               {{ project.description }}
             </p>
 
@@ -44,7 +44,7 @@ const { projects } = usePortfolioData()
               <span
                 v-for="tag in project.tags"
                 :key="tag"
-                class="px-2.5 py-1 text-xs font-medium text-primary-300 bg-primary-500/10 rounded-md"
+                class="px-2.5 py-1 text-xs font-medium text-th-accent-soft bg-primary-500/10 rounded-md"
               >
                 {{ tag }}
               </span>
@@ -56,7 +56,7 @@ const { projects } = usePortfolioData()
                 :href="project.liveUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex items-center gap-1.5 text-sm text-surface-400 hover:text-primary-400 transition-colors"
+                class="flex items-center gap-1.5 text-sm text-th-muted hover:text-th-accent transition-colors"
               >
                 <Icon
                   name="mdi:open-in-new"
@@ -69,7 +69,7 @@ const { projects } = usePortfolioData()
                 :href="project.sourceUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex items-center gap-1.5 text-sm text-surface-400 hover:text-primary-400 transition-colors"
+                class="flex items-center gap-1.5 text-sm text-th-muted hover:text-th-accent transition-colors"
               >
                 <Icon
                   name="mdi:github"
