@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { navItems } = usePortfolioData()
+const { navItems, siteSettings } = usePortfolioData()
 
 const isScrolled = ref(false)
 const isMobileMenuOpen = ref(false)
@@ -34,7 +34,7 @@ onUnmounted(() => {
           href="#hero"
           class="text-xl font-bold gradient-text tracking-tight"
         >
-          Portfolio
+          {{ siteSettings?.site_title ?? 'Portfolio' }}
         </a>
 
         <div class="hidden md:flex items-center gap-1">

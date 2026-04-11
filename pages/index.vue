@@ -1,8 +1,13 @@
 <script setup lang="ts">
+const { siteSettings } = usePortfolioData()
+
 useHead({
-  title: 'Portfolio | Full-Stack Developer',
+  title: computed(() => siteSettings.value?.page_title ?? 'Portfolio | Full-Stack Developer'),
   meta: [
-    { name: 'description', content: 'Full-Stack Developer portfolio showcasing projects, skills, and experience.' },
+    {
+      name: 'description',
+      content: computed(() => siteSettings.value?.meta_description ?? 'Full-Stack Developer portfolio showcasing projects, skills, and experience.'),
+    },
   ],
 })
 </script>

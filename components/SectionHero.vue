@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { socialLinks } = usePortfolioData()
+const { hero, socialLinks, siteSettings, getImageUrl } = usePortfolioData()
 </script>
 
 <template>
@@ -15,35 +15,39 @@ const { socialLinks } = usePortfolioData()
 
     <div class="section-container relative z-10 text-center">
       <div class="mb-8 animate-fade-in flex justify-center">
-        <ProfileAvatar size="xl" />
+        <ProfileAvatar
+          :src="getImageUrl(siteSettings?.profile_image) ?? '/images/profile.jpg'"
+          :alt="hero?.full_name ?? 'Profile'"
+          size="xl"
+        />
       </div>
 
       <div class="animate-fade-in">
         <p class="text-th-accent font-mono text-sm md:text-base mb-4 tracking-wider">
-          Hello, I'm
+          {{ hero?.greeting ?? 'Hello' }}
         </p>
       </div>
 
-      <h1 class="text-4xl  md:text-5xl lg:text-6xl font-extrabold tracking-tight animate-slide-up">
-        <span class="gradient-text">Puvakorn Pannasirichard</span>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight animate-slide-up">
+        <span class="gradient-text">{{ hero?.full_name ?? '' }}</span>
       </h1>
 
       <p class="mt-6 text-lg sm:text-xl md:text-2xl text-th-muted max-w-2xl mx-auto animate-slide-up [animation-delay:0.2s] opacity-0">
-        Full-Stack Developer crafting performant and elegant web experiences
+        {{ hero?.subtitle ?? '' }}
       </p>
 
       <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up [animation-delay:0.4s] opacity-0">
         <a
-          href="#projects"
+          :href="hero?.cta_primary_link ?? '#projects'"
           class="px-8 py-3.5 bg-th-btn hover:bg-th-btn-hover text-white font-medium rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-th-btn/25 hover:-translate-y-0.5"
         >
-          View My Work
+          {{ hero?.cta_primary_text ?? 'View My Work' }}
         </a>
         <a
-          href="#contact"
+          :href="hero?.cta_secondary_link ?? '#contact'"
           class="px-8 py-3.5 bg-th-overlay/5 hover:bg-th-overlay/10 text-th-fg font-medium rounded-xl border border-th-edge/10 hover:border-th-edge/20 transition-all duration-200 hover:-translate-y-0.5"
         >
-          Get in Touch
+          {{ hero?.cta_secondary_text ?? 'Get in Touch' }}
         </a>
       </div>
 

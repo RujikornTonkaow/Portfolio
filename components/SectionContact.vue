@@ -1,5 +1,40 @@
 <script setup lang="ts">
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBaseUrl
 const { socialLinks } = usePortfolioData()
+
+const form = reactive({
+  name: '',
+  email: '',
+  subject: '',
+  message: '',
+})
+
+const submitting = ref(false)
+const submitSuccess = ref(false)
+const submitError = ref('')
+
+const handleSubmit = async () => {
+  submitting.value = true
+  submitError.value = ''
+  submitSuccess.value = false
+
+  try {
+    await $fetch(`${apiBase}/api/v1/contact`, {
+      method: 'POST',
+      body: form,
+    })
+    submitSuccess.value = true
+    Object.assign(form, { name: '', email: '', subject: '', message: '' })
+  }
+  catch (err: unknown) {
+    const fetchErr = err as { data?: { error?: string } }
+    submitError.value = fetchErr?.data?.error || 'Failed to send message. Please try again.'
+  }
+  finally {
+    submitting.value = false
+  }
+}
 </script>
 
 <template>
@@ -28,10 +63,41 @@ const { socialLinks } = usePortfolioData()
 
       <div class="max-w-xl mx-auto">
         <div class="glass-card p-8">
-          <form
-            class="space-y-5"
-            @submit.prevent
+          <div
+            v-if="submitSuccess"
+            class="text-center py-8"
           >
+            <Icon
+              name="mdi:check-circle"
+              size="48"
+              class="text-green-500 mx-auto mb-4"
+            />
+            <p class="text-th-fg font-medium text-lg">
+              Message sent successfully!
+            </p>
+            <p class="text-th-muted text-sm mt-2">
+              Thank you for reaching out. I'll get back to you soon.
+            </p>
+            <button
+              class="mt-6 px-6 py-2 text-sm text-th-accent hover:text-th-fg transition-colors"
+              @click="submitSuccess = false"
+            >
+              Send another message
+            </button>
+          </div>
+
+          <form
+            v-else
+            class="space-y-5"
+            @submit.prevent="handleSubmit"
+          >
+            <div
+              v-if="submitError"
+              class="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm"
+            >
+              {{ submitError }}
+            </div>
+
             <div class="grid sm:grid-cols-2 gap-5">
               <div>
                 <label
@@ -42,7 +108,9 @@ const { socialLinks } = usePortfolioData()
                 </label>
                 <input
                   id="name"
+                  v-model="form.name"
                   type="text"
+                  required
                   placeholder="John Doe"
                   class="w-full px-4 py-3 bg-th-overlay/5 border border-th-edge/10 rounded-xl text-th-fg placeholder:text-th-faint focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-colors"
                 >
@@ -56,7 +124,9 @@ const { socialLinks } = usePortfolioData()
                 </label>
                 <input
                   id="email"
+                  v-model="form.email"
                   type="email"
+                  required
                   placeholder="john@example.com"
                   class="w-full px-4 py-3 bg-th-overlay/5 border border-th-edge/10 rounded-xl text-th-fg placeholder:text-th-faint focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-colors"
                 >
@@ -72,7 +142,9 @@ const { socialLinks } = usePortfolioData()
               </label>
               <input
                 id="subject"
+                v-model="form.subject"
                 type="text"
+                required
                 placeholder="Project Discussion"
                 class="w-full px-4 py-3 bg-th-overlay/5 border border-th-edge/10 rounded-xl text-th-fg placeholder:text-th-faint focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-colors"
               >
@@ -87,7 +159,9 @@ const { socialLinks } = usePortfolioData()
               </label>
               <textarea
                 id="message"
+                v-model="form.message"
                 rows="5"
+                required
                 placeholder="Tell me about your project..."
                 class="w-full px-4 py-3 bg-th-overlay/5 border border-th-edge/10 rounded-xl text-th-fg placeholder:text-th-faint focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-colors resize-none"
               />
@@ -95,9 +169,11 @@ const { socialLinks } = usePortfolioData()
 
             <button
               type="submit"
-              class="w-full px-8 py-3.5 bg-th-btn hover:bg-th-btn-hover text-white font-medium rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-th-btn/25 hover:-translate-y-0.5"
+              :disabled="submitting"
+              class="w-full px-8 py-3.5 bg-th-btn hover:bg-th-btn-hover text-white font-medium rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-th-btn/25 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
             >
-              Send Message
+              <span v-if="submitting">Sending...</span>
+              <span v-else>Send Message</span>
             </button>
           </form>
         </div>

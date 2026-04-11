@@ -14,8 +14,8 @@ const categories: { key: SkillCategory | 'all'; label: string }[] = [
 ]
 
 const filteredSkills = computed(() => {
-  if (activeCategory.value === 'all') return skills
-  return skills.filter(skill => skill.category === activeCategory.value)
+  if (activeCategory.value === 'all') return skills.value
+  return skills.value.filter(skill => skill.category === activeCategory.value)
 })
 </script>
 
@@ -52,7 +52,7 @@ const filteredSkills = computed(() => {
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         <div
           v-for="skill in filteredSkills"
-          :key="skill.name"
+          :key="skill.id"
           class="glass-card p-5 flex flex-col items-center gap-3 hover:border-primary-500/30 hover:-translate-y-1 transition-all duration-300 group"
         >
           <Icon

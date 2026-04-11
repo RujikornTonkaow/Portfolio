@@ -2,6 +2,12 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-05-04',
   devtools: { enabled: true },
 
+  runtimeConfig: {
+    public: {
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8080',
+    },
+  },
+
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxt/icon',
@@ -17,7 +23,7 @@ export default defineNuxtConfig({
       ],
       script: [
         {
-          innerHTML: `(function(){try{var t=localStorage.getItem('portfolio-theme');document.documentElement.classList.add(t==='sunshine'?'sunshine':'midnight')}catch(e){document.documentElement.classList.add('midnight')}})()`,
+          innerHTML: `(function(){try{var t=localStorage.getItem('portfolio-theme');if(t==='midnight'||t==='sunshine'){document.documentElement.classList.remove('midnight','sunshine');document.documentElement.classList.add(t)}}catch(e){}})()`,
         },
       ],
       link: [

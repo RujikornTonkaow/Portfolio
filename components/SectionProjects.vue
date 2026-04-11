@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { projects } = usePortfolioData()
+const { projects, getImageUrl } = usePortfolioData()
 </script>
 
 <template>
@@ -21,10 +21,23 @@ const { projects } = usePortfolioData()
       <div class="grid md:grid-cols-2 gap-6">
         <article
           v-for="project in projects"
-          :key="project.title"
+          :key="project.id"
           class="glass-card overflow-hidden group hover:border-primary-500/20 transition-all duration-300"
         >
-          <div class="h-48 bg-gradient-to-br from-primary-500/20 via-th-bg-el to-cyan-500/20 flex items-center justify-center">
+          <div
+            v-if="project.image && getImageUrl(project.image)"
+            class="h-48 overflow-hidden"
+          >
+            <img
+              :src="getImageUrl(project.image)!"
+              :alt="project.title"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            >
+          </div>
+          <div
+            v-else
+            class="h-48 bg-gradient-to-br from-primary-500/20 via-th-bg-el to-cyan-500/20 flex items-center justify-center"
+          >
             <Icon
               name="mdi:code-braces"
               size="48"
@@ -52,8 +65,8 @@ const { projects } = usePortfolioData()
 
             <div class="flex items-center gap-4">
               <a
-                v-if="project.liveUrl"
-                :href="project.liveUrl"
+                v-if="project.live_url"
+                :href="project.live_url"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="flex items-center gap-1.5 text-sm text-th-muted hover:text-th-accent transition-colors"
@@ -65,8 +78,8 @@ const { projects } = usePortfolioData()
                 Live Demo
               </a>
               <a
-                v-if="project.sourceUrl"
-                :href="project.sourceUrl"
+                v-if="project.source_url"
+                :href="project.source_url"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="flex items-center gap-1.5 text-sm text-th-muted hover:text-th-accent transition-colors"

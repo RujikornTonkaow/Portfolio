@@ -1,43 +1,59 @@
 export type Theme = 'midnight' | 'sunshine'
 
-let initialized = false
+const STORAGE_KEY = 'portfolio-theme'
+const STORAGE_VERSION_KEY = 'portfolio-theme-api-version'
 
 export const useTheme = () => {
-  const theme = useState<Theme>('app-theme', () => 'midnight')
+  const { siteSettings } = usePortfolioData()
 
-  const applyTheme = (t: Theme, animate = false) => {
-    if (animate) {
+  const apiDefault = computed<Theme>(() => siteSettings.value?.default_theme ?? 'midnight')
+  const apiVersion = computed(() => siteSettings.value?.updated_at ?? '')
+
+  const theme = useState<Theme>('app-theme', () => apiDefault.value)
+
+  useHead({
+    htmlAttrs: {
+      class: computed(() => theme.value),
+    },
+  })
+
+  const toggleTheme = () => {
+    const newTheme: Theme = theme.value === 'midnight' ? 'sunshine' : 'midnight'
+
+    if (import.meta.client) {
       document.documentElement.classList.add('theme-transition')
-    }
-    document.documentElement.classList.remove('midnight', 'sunshine')
-    document.documentElement.classList.add(t)
-    if (animate) {
       setTimeout(() => {
         document.documentElement.classList.remove('theme-transition')
       }, 500)
+      localStorage.setItem(STORAGE_KEY, newTheme)
     }
-  }
 
-  const setTheme = (newTheme: Theme, animate = false) => {
     theme.value = newTheme
-    if (import.meta.client) {
-      applyTheme(newTheme, animate)
-      localStorage.setItem('portfolio-theme', newTheme)
+  }
+
+  if (import.meta.client) {
+    const resolveTheme = () => {
+      const version = apiVersion.value
+      if (!version) return
+
+      const savedVersion = localStorage.getItem(STORAGE_VERSION_KEY)
+      const userPref = localStorage.getItem(STORAGE_KEY) as Theme | null
+
+      if (savedVersion !== version) {
+        localStorage.setItem(STORAGE_VERSION_KEY, version)
+        localStorage.removeItem(STORAGE_KEY)
+        theme.value = apiDefault.value
+      } else if (userPref) {
+        theme.value = userPref
+      }
     }
+
+    resolveTheme()
+
+    watch(apiVersion, (newVersion) => {
+      if (newVersion) resolveTheme()
+    })
   }
 
-  const toggleTheme = () => {
-    setTheme(theme.value === 'midnight' ? 'sunshine' : 'midnight', true)
-  }
-
-  if (import.meta.client && !initialized) {
-    initialized = true
-    const saved = localStorage.getItem('portfolio-theme') as Theme | null
-    if (saved) {
-      theme.value = saved
-    }
-    applyTheme(theme.value)
-  }
-
-  return { theme: readonly(theme), toggleTheme, setTheme }
+  return { theme: readonly(theme), toggleTheme }
 }

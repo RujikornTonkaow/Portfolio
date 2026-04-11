@@ -24,7 +24,7 @@ const { experiences } = usePortfolioData()
 
           <div
             v-for="(exp, index) in experiences"
-            :key="exp.company"
+            :key="exp.id"
             class="relative pl-12 md:pl-16 pb-12 last:pb-0"
           >
             <div

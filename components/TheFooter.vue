@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { socialLinks } = usePortfolioData()
+const { socialLinks, siteSettings } = usePortfolioData()
 const currentYear = new Date().getFullYear()
 </script>
 
@@ -12,10 +12,10 @@ const currentYear = new Date().getFullYear()
             href="#hero"
             class="text-lg font-bold gradient-text"
           >
-            Portfolio
+            {{ siteSettings?.site_title ?? 'Portfolio' }}
           </a>
           <p class="text-sm text-th-subtle mt-1">
-            Crafting digital experiences
+            {{ siteSettings?.footer_tagline ?? 'Crafting digital experiences' }}
           </p>
         </div>
 
