@@ -20,7 +20,7 @@ const handleSubmit = async () => {
   submitSuccess.value = false
 
   try {
-    await $fetch(`${apiBase}/api/v1/contact`, {
+    await $fetch(`${apiBase}/api/v1/contact/`, {
       method: 'POST',
       body: form,
     })
