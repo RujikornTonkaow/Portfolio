@@ -256,7 +256,7 @@ const { testimonials, getImageUrl } = usePortfolioData()
 
 #### ขั้นตอนที่ 5: อัปเดท Backend API
 
-เพิ่ม `testimonials` array ใน `GET /api/v1/portfolio` response
+เพิ่ม `testimonials` array ใน `GET /api/v1/public/sites/{siteId}/portfolio` response
 
 ---
 
@@ -611,14 +611,19 @@ if (import.meta.client) {
 | **ใช้เมื่อ** | ดึงข้อมูลแสดงผล (GET) | User action ที่ไม่ต้อง cache (POST, PUT, DELETE) |
 | **SSR** | รันบน server แล้ว hydrate | รันฝั่ง client เท่านั้น (ใน event handler) |
 | **Deduplication** | มี (ตาม `key`) | ไม่มี |
-| **ตัวอย่าง** | `usePortfolioData.ts` → GET portfolio | `SectionContact.vue` → POST contact form |
+| **ตัวอย่าง** | `usePortfolioData.ts` → resolve site + GET portfolio | `SectionContact.vue` → POST contact form |
 
 ```ts
-// GET data สำหรับแสดงผล → useFetch (SSR-safe, cached)
-const { data } = useFetch('/api/v1/portfolio', { key: 'portfolio-data' })
+// GET data สำหรับแสดงผล → useAsyncData (SSR-safe, cached)
+const { data } = useAsyncData('portfolio-data:localhost:3000', async () => {
+  const site = await $fetch('/api/v1/public/sites/by-domain', {
+    query: { host: 'localhost:3000' },
+  })
+  return $fetch(`/api/v1/public/sites/${site.data.id}/portfolio`)
+})
 
 // POST จาก user action → $fetch (client-side, no caching needed)
-await $fetch('/api/v1/contact', { method: 'POST', body: form })
+await $fetch(`/api/v1/public/sites/${siteId}/portfolio/contacts`, { method: 'POST', body: form })
 ```
 
 ### `withDefaults` + `defineProps`

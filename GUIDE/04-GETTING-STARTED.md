@@ -176,10 +176,13 @@ npm run generate
 
 | ส่วน | Endpoint | วิธี |
 | ---- | -------- | ---- |
-| Portfolio data | `GET /api/v1/portfolio` | Return JSON ตาม format ใน `PORTFOLIO_FRONTEND_SPEC.md` |
-| Contact form | `POST /api/v1/contact` | รับ JSON body: `{ name, email, subject, message }` |
+| Site resolve | `GET /api/v1/public/sites/by-domain?host=:hostname` | Return site ที่ผูกกับ host ปัจจุบัน |
+| Portfolio data | `GET /api/v1/public/sites/{siteId}/portfolio` | Return JSON ตาม format ใน `PORTFOLIO_FRONTEND_SPEC.md` |
+| Contact form | `POST /api/v1/public/sites/{siteId}/portfolio/contacts` | รับ JSON body: `{ name, email, subject, message }` |
 | Images | `GET /uploads/*` | Serve static files (profile image, project images) |
 | CORS | - | อนุญาต origin `http://localhost:3000` (dev) |
+
+ค่า `host` ต้องตรงกับรายการใน backend `sites.domains` แบบ exact match เช่น `localhost:3000`
 
 ### ถ้ายังไม่มี Backend
 

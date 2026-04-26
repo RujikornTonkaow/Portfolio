@@ -194,7 +194,7 @@ NUXT_PUBLIC_API_BASE_URL=http://localhost:8080
 **หน้าที่:** เอกสาร API contract สำหรับคนที่จะสร้าง Backend
 
 อธิบาย:
-- API endpoints ที่ Frontend ต้องการ
+- API endpoints ที่ Frontend ต้องการ รวมถึง public multi-site site resolution
 - JSON response format
 - Data model ของแต่ละ section
 - รูปแบบการจัดการรูปภาพ
@@ -211,6 +211,8 @@ NUXT_PUBLIC_API_BASE_URL=http://localhost:8080
 
 | Interface | ใช้กับ | อธิบาย |
 | --------- | ------ | ------ |
+| `ApiEnvelope<T>` | usePortfolioData, SectionContact | JSON envelope ของ backend (`data` หรือ `error`) |
+| `ManagedSite` | usePortfolioData | ข้อมูล site ที่ resolve จาก current host |
 | `SiteSettings` | Navbar, Footer, Hero, Theme | ค่าตั้งค่าเว็บ (title, theme, profile image) |
 | `HeroData` | SectionHero | ข้อมูล hero section (ชื่อ, greeting, CTA buttons) |
 | `Stat` | SectionAbout | ตัวเลขสถิติ (value + label) |
@@ -234,19 +236,23 @@ NUXT_PUBLIC_API_BASE_URL=http://localhost:8080
 
 **วิธีทำงาน:**
 1. อ่าน `apiBaseUrl` จาก `runtimeConfig`
-2. ใช้ `useFetch()` เรียก `GET /api/v1/portfolio` พร้อม cache key `'portfolio-data'`
-   - ตั้ง `default: () => ({ data: null as unknown as PortfolioData })` เพื่อให้ `data` ไม่เป็น `undefined` ตอน SSR initial render — ป้องกัน hydration mismatch
-3. แปลง response เป็น computed refs แยกตามหมวด
-4. มีฟังก์ชัน `getImageUrl(path)` สำหรับสร้าง full URL ของรูปภาพ
+2. อ่าน host ปัจจุบันจาก `useRequestURL().host`
+3. ใช้ `useAsyncData()` เรียก `GET /api/v1/public/sites/by-domain?host={host}` เพื่อ resolve site
+4. ใช้ `site.id` เรียก `GET /api/v1/public/sites/{siteId}/portfolio`
+5. แปลง response เป็น computed refs แยกตามหมวด
+6. มีฟังก์ชัน `getImageUrl(path)` สำหรับสร้าง full URL ของรูปภาพ
 
 **สิ่งที่ควรรู้:**
-- `pending` และ `error` ถูก return ออกมา แต่ **ยังไม่มี component ไหนใช้** — ปัจจุบัน UI ใช้ `??` fallback แทนการแสดง loading spinner หรือ error page
-- ถ้าต้องการเพิ่ม loading/error UI ในอนาคต สามารถใช้ `pending` และ `error` ที่ return มาได้ทันที
+- `pending` และ `error` ถูก return ออกมาเพื่อให้ component แสดง loading/error state ได้
+- `SectionContact` ใช้ `error` เพื่อ disable form เมื่อ resolve site ไม่สำเร็จ
+- cache key ผูกกับ host เช่น `portfolio-data:localhost:3000` เพื่อไม่ให้ข้อมูลคนละ domain ปะปนกัน
 
 **Return values:**
 
 | ค่า | Type | อธิบาย |
 | --- | ---- | ------ |
+| `site` | `ComputedRef<ManagedSite \| null>` | site ที่ resolve จาก host ปัจจุบัน |
+| `siteId` | `ComputedRef<string \| null>` | id ของ site สำหรับ public API ที่ต้องมี siteId |
 | `portfolio` | `ComputedRef<PortfolioData \| null>` | ข้อมูลดิบทั้งหมด |
 | `siteSettings` | `ComputedRef<SiteSettings \| null>` | ค่าตั้งค่าเว็บ |
 | `hero` | `ComputedRef<HeroData \| null>` | ข้อมูล hero section |
@@ -258,6 +264,7 @@ NUXT_PUBLIC_API_BASE_URL=http://localhost:8080
 | `navItems` | `ComputedRef<NavItem[]>` | รายการ nav items |
 | `pending` | `Ref<boolean>` | สถานะกำลังโหลด |
 | `error` | `Ref` | error ถ้ามี |
+| `refresh` | `() => Promise<void>` | reload site/portfolio data |
 | `getImageUrl` | `(path?: string) => string \| null` | สร้าง full URL สำหรับรูปภาพ |
 
 ---
@@ -437,7 +444,7 @@ NUXT_PUBLIC_API_BASE_URL=http://localhost:8080
 | ------- | ---------- |
 | Form Fields | name, email, subject, message |
 | Validation | HTML5 required attribute |
-| Submit | `$fetch POST /api/v1/contact` |
+| Submit | `$fetch POST /api/v1/public/sites/{siteId}/portfolio/contacts` |
 | Success UI | check icon + success message + "Send another" button |
 | Error UI | error banner สีแดงแสดง message จาก API |
 | Loading State | ปุ่มเปลี่ยนเป็น "Sending..." + disabled |

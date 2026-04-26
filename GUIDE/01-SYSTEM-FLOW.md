@@ -52,8 +52,9 @@
 │           │   Backend API       │                 │
 │           │   (port 8080)       │                 │
 │           │                     │                 │
-│           │  GET  /api/v1/portfolio   ← ข้อมูลทั้งหมด │
-│           │  POST /api/v1/contact    ← ส่ง form      │
+│           │  GET  /api/v1/public/sites/by-domain     │
+│           │  GET  /api/v1/public/sites/{siteId}/portfolio │
+│           │  POST /api/v1/public/sites/{siteId}/portfolio/contacts │
 │           │  GET  /uploads/*         ← รูปภาพ        │
 │           └─────────────────────┘                 │
 └──────────────────────────────────────────────────┘
@@ -82,9 +83,11 @@
    │   └── register scroll listener
    │
    ├── pages/index.vue mount
-   │   ├── usePortfolioData() → trigger useFetch
-   │   │   └── GET /api/v1/portfolio
-   │   │   └── cache ด้วย key: 'portfolio-data'
+   │   ├── usePortfolioData() → trigger useAsyncData
+   │   │   ├── อ่าน host ปัจจุบัน เช่น localhost:3000
+   │   │   ├── GET /api/v1/public/sites/by-domain?host=localhost:3000
+   │   │   ├── GET /api/v1/public/sites/{siteId}/portfolio
+   │   │   └── cache ด้วย key: 'portfolio-data:{host}'
    │   │
    │   ├── useHead() → set page_title, meta_description
    │   │
@@ -101,7 +104,7 @@
 
 ### 2.2 Data Sharing ระหว่าง Components
 
-`usePortfolioData()` ใช้ `useFetch` กับ key `'portfolio-data'` ซึ่ง Nuxt จะ deduplicate request:
+`usePortfolioData()` ใช้ `useAsyncData` กับ key ตาม host เช่น `'portfolio-data:localhost:3000'` ซึ่ง Nuxt จะ deduplicate request:
 
 - ทุก component ที่เรียก `usePortfolioData()` จะ **ใช้ข้อมูลชุดเดียวกัน**
 - **ไม่** เกิด HTTP request ซ้ำ — Nuxt cache ไว้ตาม key
@@ -117,7 +120,13 @@
 usePortfolioData()
        │
        ▼
-useFetch('http://localhost:8080/api/v1/portfolio')
+อ่าน host ปัจจุบันจาก useRequestURL()
+       │
+       ▼
+$fetch('http://localhost:8080/api/v1/public/sites/by-domain?host=localhost:3000')
+       │
+       ▼
+$fetch('http://localhost:8080/api/v1/public/sites/{siteId}/portfolio')
        │
        ▼
 API Response:
@@ -221,7 +230,7 @@ handleSubmit()
    ├── submitting = true (ปุ่มเปลี่ยนเป็น "Sending...")
    ├── ล้าง error ก่อนหน้า
    │
-   ├── $fetch POST /api/v1/contact
+   ├── $fetch POST /api/v1/public/sites/{siteId}/portfolio/contacts
    │   └── body: { name, email, subject, message }
    │
    ├── สำเร็จ ✓
@@ -303,12 +312,16 @@ Fallback:
 ## Summary Diagram
 
 ```
-┌─────────────┐      GET /api/v1/portfolio      ┌──────────────┐
+┌─────────────┐      GET /api/v1/public/sites/by-domain      ┌──────────────┐
 │   Browser   │  ──────────────────────────────► │  Backend API │
 │             │  ◄──────────────────────────────  │  :8080       │
-│  Nuxt 3 App │      JSON (portfolio data)       │              │
+│  Nuxt 3 App │      JSON (site data)            │              │
+│             │      GET /api/v1/public/sites/{siteId}/portfolio │
+│             │  ──────────────────────────────► │              │
+│             │  ◄──────────────────────────────  │              │
+│             │      JSON (portfolio data)       │              │
 │             │                                   │  /uploads/*  │
-│             │      POST /api/v1/contact         │              │
+│             │      POST /api/v1/public/sites/{siteId}/portfolio/contacts │
 │  Contact    │  ──────────────────────────────► │              │
 │  Form       │  ◄──────────────────────────────  │              │
 │             │      { data: { message } }       │              │

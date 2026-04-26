@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const config = useRuntimeConfig()
-const apiBase = config.public.apiBaseUrl
-const { socialLinks } = usePortfolioData()
+const apiBase = String(config.public.apiBaseUrl).replace(/\/$/, '')
+const { socialLinks, siteId, error: portfolioError } = usePortfolioData()
 
 const form = reactive({
   name: '',
@@ -13,16 +13,22 @@ const form = reactive({
 const submitting = ref(false)
 const submitSuccess = ref(false)
 const submitError = ref('')
+const canSubmit = computed(() => Boolean(siteId.value) && !portfolioError.value)
 
 const handleSubmit = async () => {
+  if (!siteId.value) {
+    submitError.value = 'Portfolio site is not ready yet. Please refresh and try again.'
+    return
+  }
+
   submitting.value = true
   submitError.value = ''
   submitSuccess.value = false
 
   try {
-    await $fetch(`${apiBase}/api/v1/contact`, {
+    await $fetch(`${apiBase}/api/v1/public/sites/${siteId.value}/portfolio/contacts`, {
       method: 'POST',
-      body: form,
+      body: { ...form },
     })
     submitSuccess.value = true
     Object.assign(form, { name: '', email: '', subject: '', message: '' })
@@ -98,6 +104,13 @@ const handleSubmit = async () => {
               {{ submitError }}
             </div>
 
+            <div
+              v-else-if="portfolioError"
+              class="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm"
+            >
+              Unable to resolve this portfolio site. Please check the domain configuration.
+            </div>
+
             <div class="grid sm:grid-cols-2 gap-5">
               <div>
                 <label
@@ -169,7 +182,7 @@ const handleSubmit = async () => {
 
             <button
               type="submit"
-              :disabled="submitting"
+              :disabled="submitting || !canSubmit"
               class="w-full px-8 py-3.5 bg-th-btn hover:bg-th-btn-hover text-white font-medium rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-th-btn/25 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
             >
               <span v-if="submitting">Sending...</span>

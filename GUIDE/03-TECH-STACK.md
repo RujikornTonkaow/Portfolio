@@ -45,7 +45,9 @@
 │                                                       │
 │  ┌──────────────────────────────────────────────────┐ │
 │  │  Backend API  (ไม่รวมในโปรเจกต์นี้)               │ │
-│  │  GET /api/v1/portfolio  |  POST /api/v1/contact  │ │
+│  │  GET /api/v1/public/sites/by-domain              │ │
+│  │  GET /api/v1/public/sites/{siteId}/portfolio     │ │
+│  │  POST /api/v1/public/sites/{siteId}/portfolio/contacts │ │
 │  │  Static files: /uploads/*                        │ │
 │  └──────────────────────────────────────────────────┘ │
 └──────────────────────────────────────────────────────┘
@@ -215,7 +217,7 @@ Icon names ส่วนใหญ่มาจาก **API data** (field `icon` �
 | ------ | ---------- |
 | **ไม่รวม** ในโปรเจกต์นี้ | ต้องสร้างหรือ deploy แยก |
 | **Default URL** | `http://localhost:8080` (ตั้งผ่าน env `NUXT_PUBLIC_API_BASE_URL`) |
-| **Endpoints** | `GET /api/v1/portfolio`, `POST /api/v1/contact` |
+| **Endpoints** | `GET /api/v1/public/sites/by-domain`, `GET /api/v1/public/sites/{siteId}/portfolio`, `POST /api/v1/public/sites/{siteId}/portfolio/contacts` |
 | **Static Files** | `/uploads/*` สำหรับรูปภาพ |
 | **API Spec** | ดูรายละเอียดใน `PORTFOLIO_FRONTEND_SPEC.md` |
 

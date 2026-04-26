@@ -1,5 +1,23 @@
+export interface ApiEnvelope<T> {
+  data?: T
+  error?: string
+}
+
+export type SiteType = 'portfolio' | 'shop' | 'finance'
+
+export interface ManagedSite {
+  id: string
+  name: string
+  slug: string
+  type: SiteType
+  domains: string[]
+  created_at: string
+  updated_at: string
+}
+
 export interface SiteSettings {
   id: string
+  site_id?: string
   site_title: string
   page_title: string
   meta_description: string
@@ -10,6 +28,8 @@ export interface SiteSettings {
 }
 
 export interface HeroData {
+  id?: string
+  site_id?: string
   greeting: string
   full_name: string
   subtitle: string
@@ -25,6 +45,8 @@ export interface Stat {
 }
 
 export interface AboutData {
+  id?: string
+  site_id?: string
   title: string
   bio_paragraphs: string[]
   personality_tags: string[]
@@ -35,6 +57,7 @@ export type SkillCategory = 'frontend' | 'backend' | 'devops' | 'tools'
 
 export interface Skill {
   id: string
+  site_id?: string
   name: string
   icon: string
   category: SkillCategory
@@ -45,6 +68,7 @@ export interface Skill {
 
 export interface Project {
   id: string
+  site_id?: string
   title: string
   description: string
   tags: string[]
@@ -58,6 +82,7 @@ export interface Project {
 
 export interface Experience {
   id: string
+  site_id?: string
   role: string
   company: string
   period: string
@@ -70,6 +95,7 @@ export interface Experience {
 
 export interface SocialLink {
   id: string
+  site_id?: string
   name: string
   url: string
   icon: string

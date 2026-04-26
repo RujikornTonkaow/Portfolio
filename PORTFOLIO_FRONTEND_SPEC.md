@@ -1,7 +1,7 @@
 # Portfolio Frontend — API Specification for Backend
 
 เอกสารนี้ระบุ **API contract** ที่ Portfolio Frontend ต้องการจาก Backend
-Frontend ดึงข้อมูลจาก `GET /api/v1/portfolio` และส่ง contact form ผ่าน `POST /api/v1/contact`
+Frontend resolve site จาก hostname ก่อน แล้วดึงข้อมูล/ส่ง contact form ผ่าน public multi-site endpoints
 
 ---
 
@@ -20,10 +20,13 @@ Frontend ดึงข้อมูลจาก `GET /api/v1/portfolio` และ�
 
 ### Public Endpoints (ไม่ต้อง auth)
 
-| Method | URL                  | คำอธิบาย                                      |
-| ------ | -------------------- | --------------------------------------------- |
-| `GET`  | `/api/v1/portfolio`  | ดึงข้อมูล portfolio ทั้งหมดใน response เดียว    |
-| `POST` | `/api/v1/contact`    | รับข้อความจาก contact form                     |
+| Method | URL                                             | คำอธิบาย                                      |
+| ------ | ----------------------------------------------- | --------------------------------------------- |
+| `GET`  | `/api/v1/public/sites/by-domain?host=:hostname` | แปลง hostname เป็น site                       |
+| `GET`  | `/api/v1/public/sites/{siteId}/portfolio`       | ดึงข้อมูล portfolio ทั้งหมดของ site ใน response เดียว |
+| `POST` | `/api/v1/public/sites/{siteId}/portfolio/contacts` | รับข้อความจาก contact form ของ site นั้น       |
+
+Frontend อ่าน `host` จาก URL ปัจจุบันด้วย Nuxt SSR/client runtime และส่งค่าแบบ exact match เช่น `localhost:3000` ถ้า backend เก็บ domain พร้อม port ใน `sites.domains`
 
 ### CORS
 
@@ -46,6 +49,22 @@ Frontend คาดหวัง JSON envelope format:
     "experiences": [ ... ],
     "social_links": [ ... ],
     "nav_items": [ ... ]
+  }
+}
+```
+
+Domain resolve response:
+
+```json
+{
+  "data": {
+    "id": "6789abcdef0123456789abcd",
+    "name": "My Portfolio",
+    "slug": "default",
+    "type": "portfolio",
+    "domains": ["localhost:3000"],
+    "created_at": "2025-01-15T10:00:00Z",
+    "updated_at": "2025-01-15T10:00:00Z"
   }
 }
 ```
@@ -201,7 +220,7 @@ Frontend ดึงรูปภาพจาก API base URL + path ที่ไ�
 ### Request
 
 ```
-POST /api/v1/contact
+POST /api/v1/public/sites/{siteId}/portfolio/contacts
 Content-Type: application/json
 ```
 

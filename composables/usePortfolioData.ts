@@ -1,18 +1,57 @@
-import type { PortfolioData } from '~/types/portfolio'
+import type { ApiEnvelope, ManagedSite, PortfolioData } from '~/types/portfolio'
+
+interface PortfolioState {
+  site: ManagedSite | null
+  portfolio: PortfolioData | null
+}
 
 export const usePortfolioData = () => {
   const config = useRuntimeConfig()
-  const apiBase = config.public.apiBaseUrl
+  const apiBase = String(config.public.apiBaseUrl).replace(/\/$/, '')
+  const requestURL = useRequestURL()
+  const host = requestURL.host
 
-  const { data, pending, error } = useFetch<{ data: PortfolioData }>(
-    `${apiBase}/api/v1/portfolio`,
+  const { data, pending, error, refresh } = useAsyncData<PortfolioState>(
+    `portfolio-data:${host}`,
+    async () => {
+      const siteResponse = await $fetch<ApiEnvelope<ManagedSite>>(
+        `${apiBase}/api/v1/public/sites/by-domain`,
+        {
+          query: { host },
+        },
+      )
+
+      if (!siteResponse.data?.id) {
+        throw createError({
+          statusCode: 404,
+          statusMessage: `No portfolio site found for ${host}`,
+        })
+      }
+
+      const portfolioResponse = await $fetch<ApiEnvelope<PortfolioData>>(
+        `${apiBase}/api/v1/public/sites/${siteResponse.data.id}/portfolio`,
+      )
+
+      if (!portfolioResponse.data) {
+        throw createError({
+          statusCode: 502,
+          statusMessage: 'Portfolio API returned an empty response',
+        })
+      }
+
+      return {
+        site: siteResponse.data,
+        portfolio: portfolioResponse.data,
+      }
+    },
     {
-      key: 'portfolio-data',
-      default: () => ({ data: null as unknown as PortfolioData }),
+      default: () => ({ site: null, portfolio: null }),
     },
   )
 
-  const portfolio = computed(() => data.value?.data ?? null)
+  const site = computed(() => data.value?.site ?? null)
+  const siteId = computed(() => site.value?.id ?? null)
+  const portfolio = computed(() => data.value?.portfolio ?? null)
 
   const siteSettings = computed(() => portfolio.value?.site_settings ?? null)
   const hero = computed(() => portfolio.value?.hero ?? null)
@@ -29,6 +68,8 @@ export const usePortfolioData = () => {
   }
 
   return {
+    site,
+    siteId,
     portfolio,
     siteSettings,
     hero,
@@ -40,6 +81,7 @@ export const usePortfolioData = () => {
     navItems,
     pending,
     error,
+    refresh,
     getImageUrl,
   }
 }
