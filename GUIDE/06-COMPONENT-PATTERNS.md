@@ -615,9 +615,12 @@ if (import.meta.client) {
 
 ```ts
 // GET data สำหรับแสดงผล → useAsyncData (SSR-safe, cached)
-const { data } = useAsyncData('portfolio-data:localhost:3000', async () => {
+const requestURL = useRequestURL()
+const host = requestURL.host
+
+const { data } = useAsyncData(`portfolio-data:${host}`, async () => {
   const site = await $fetch('/api/v1/public/sites/by-domain', {
-    query: { host: 'localhost:3000' },
+    query: { host },
   })
   return $fetch(`/api/v1/public/sites/${site.data.id}/portfolio`)
 })

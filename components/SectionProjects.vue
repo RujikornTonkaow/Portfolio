@@ -1,99 +1,102 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 const { projects, getImageUrl } = usePortfolioData()
+const activeTag = ref('All')
+const tags = computed(() => [
+  'All',
+  ...new Set(projects.value.flatMap((project) => project.tags)),
+])
+const filteredProjects = computed(() =>
+  activeTag.value === 'All'
+    ? projects.value
+    : projects.value.filter((project) =>
+        project.tags.includes(activeTag.value),
+      ),
+)
+watch(tags, (value) => {
+  if (!value.includes(activeTag.value)) activeTag.value = 'All'
+})
+const brokenImages = reactive(new Set<string>())
 </script>
-
 <template>
-  <section
-    id="projects"
-    class="section-padding"
-  >
+  <section id="projects" class="section-padding projects-section">
     <div class="section-container">
-      <div class="text-center mb-14">
-        <p class="text-th-accent font-mono text-sm tracking-wider mb-3">
-          Portfolio
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow section-index">02 / SELECTED WORK</p>
+          <h2>Ideas, made <em>real.</em></h2>
+        </div>
+        <p>
+          A selection of things I’ve built.<br />From the first idea to the
+          final detail.
         </p>
-        <h2 class="text-3xl md:text-4xl font-bold text-th-fg">
-          Featured
-          <span class="gradient-text">Projects</span>
-        </h2>
       </div>
-
-      <div class="grid md:grid-cols-2 gap-6">
-        <article
-          v-for="project in projects"
-          :key="project.id"
-          class="glass-card overflow-hidden group hover:border-primary-500/20 transition-all duration-300"
+      <div
+        v-if="projects.length"
+        class="filter-list"
+        aria-label="Filter projects"
+      >
+        <button
+          v-for="tag in tags"
+          :key="tag"
+          :class="{ active: activeTag === tag }"
+          :aria-pressed="activeTag === tag"
+          @click="activeTag = tag"
         >
-          <div
-            v-if="project.image && getImageUrl(project.image)"
-            class="h-48 overflow-hidden"
-          >
+          {{ tag
+          }}<span v-if="tag === 'All'">{{
+            projects.length.toString().padStart(2, '0')
+          }}</span>
+        </button>
+      </div>
+      <div class="projects-grid">
+        <article
+          v-for="(project, index) in filteredProjects"
+          :key="project.id"
+          class="project-card"
+        >
+          <div class="project-visual" :class="`project-color-${index % 3}`">
             <img
+              v-if="project.image && !brokenImages.has(project.image)"
               :src="getImageUrl(project.image)!"
               :alt="project.title"
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+              @error="brokenImages.add(project.image!)"
+            />
+            <div v-else class="project-placeholder" aria-hidden="true">
+              <span>{{ project.title.slice(0, 1) }}</span>
+              <div class="placeholder-orbit" />
+            </div>
+            <span class="project-number"
+              >{{ (index + 1).toString().padStart(2, '0') }} / PROJECT</span
             >
           </div>
-          <div
-            v-else
-            class="h-48 bg-gradient-to-br from-primary-500/20 via-th-bg-el to-cyan-500/20 flex items-center justify-center"
-          >
-            <Icon
-              name="mdi:code-braces"
-              size="48"
-              class="text-th-faint group-hover:text-th-accent group-hover:scale-110 transition-all duration-300"
-            />
-          </div>
-
-          <div class="p-6">
-            <h3 class="text-xl font-semibold text-th-fg mb-2 group-hover:text-th-accent-soft transition-colors">
-              {{ project.title }}
-            </h3>
-            <p class="text-th-muted text-sm leading-relaxed mb-4">
-              {{ project.description }}
-            </p>
-
-            <div class="flex flex-wrap gap-2 mb-5">
-              <span
-                v-for="tag in project.tags"
-                :key="tag"
-                class="px-2.5 py-1 text-xs font-medium text-th-accent-soft bg-primary-500/10 rounded-md"
-              >
-                {{ tag }}
-              </span>
+          <div class="project-meta">
+            <div class="tag-list">
+              <span v-for="tag in project.tags" :key="tag">{{ tag }}</span>
             </div>
-
-            <div class="flex items-center gap-4">
+            <h3>{{ project.title }}</h3>
+            <p>{{ project.description }}</p>
+            <div class="project-links">
               <a
                 v-if="project.live_url"
                 :href="project.live_url"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex items-center gap-1.5 text-sm text-th-muted hover:text-th-accent transition-colors"
-              >
-                <Icon
-                  name="mdi:open-in-new"
-                  size="16"
-                />
-                Live Demo
-              </a>
-              <a
+                >View project <span aria-hidden="true">↗</span></a
+              ><a
                 v-if="project.source_url"
                 :href="project.source_url"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex items-center gap-1.5 text-sm text-th-muted hover:text-th-accent transition-colors"
+                ><Icon name="mdi:github" size="17" /> Source code</a
               >
-                <Icon
-                  name="mdi:github"
-                  size="16"
-                />
-                Source Code
-              </a>
             </div>
           </div>
         </article>
       </div>
+      <p v-if="!projects.length" class="empty-state">
+        New work is on the way. Check back soon.
+      </p>
     </div>
   </section>
 </template>

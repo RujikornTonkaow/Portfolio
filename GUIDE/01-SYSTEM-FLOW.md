@@ -22,6 +22,8 @@
 
 > **หมายเหตุ:** Nuxt 3 default คือ SSR (Server-Side Rendering) ไม่ใช่ SPA — HTML ถูก render ที่ server ก่อนส่งให้ browser จากนั้น Vue hydrate เป็น interactive app
 
+เว็บนี้เป็น **multi-site public frontend**: instance เดียวกันสามารถ deploy ได้หลาย domain โดยแต่ละ domain ต้องมี record ใน backend `sites.domains` แล้ว frontend จะ resolve `siteId` จาก host ปัจจุบันก่อนดึงข้อมูล portfolio
+
 ```
 ┌──────────────────────────────────────────────────┐
 │                    Browser                        │
@@ -108,6 +110,7 @@
 
 - ทุก component ที่เรียก `usePortfolioData()` จะ **ใช้ข้อมูลชุดเดียวกัน**
 - **ไม่** เกิด HTTP request ซ้ำ — Nuxt cache ไว้ตาม key
+- ข้อมูลของแต่ละ domain ไม่ปะปนกัน เพราะ cache key ผูกกับ host ปัจจุบัน
 - แต่ละ component เลือก slice ที่ต้องการผ่าน `computed()` เช่น `skills`, `hero`, `projects`
 
 ---

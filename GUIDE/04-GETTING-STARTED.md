@@ -180,9 +180,19 @@ npm run generate
 | Portfolio data | `GET /api/v1/public/sites/{siteId}/portfolio` | Return JSON ตาม format ใน `PORTFOLIO_FRONTEND_SPEC.md` |
 | Contact form | `POST /api/v1/public/sites/{siteId}/portfolio/contacts` | รับ JSON body: `{ name, email, subject, message }` |
 | Images | `GET /uploads/*` | Serve static files (profile image, project images) |
-| CORS | - | อนุญาต origin `http://localhost:3000` (dev) |
+| CORS | - | อนุญาต origin ของเว็บนี้; backend สามารถโหลด portfolio domains จาก `sites.domains` |
 
 ค่า `host` ต้องตรงกับรายการใน backend `sites.domains` แบบ exact match เช่น `localhost:3000`
+
+### Multi-site Checklist
+
+ก่อนเว็บนี้จะแสดงข้อมูลได้ ต้องมี site ใน backend ก่อน:
+
+1. สร้าง site ที่ Admin Dashboard หน้า `Site Management`
+2. ตั้ง `type` เป็น `portfolio`
+3. ใส่ `domains` ให้ตรงกับ host ของเว็บนี้ เช่น `localhost:3000` หรือ `portfolio-nu-gray-57.vercel.app`
+4. ห้ามใส่ protocol หรือ slash ใน `domains` เช่นไม่ใช้ `https://portfolio-nu-gray-57.vercel.app/`
+5. ตั้ง `NUXT_PUBLIC_API_BASE_URL` ของเว็บนี้ให้ชี้ backend ตัวเดียวกับ Admin Dashboard
 
 ### ถ้ายังไม่มี Backend
 
@@ -232,6 +242,7 @@ npx nuxt prepare
 ตรวจสอบว่า Backend อนุญาต origin ของ Frontend:
 - Dev: `http://localhost:3000`
 - Production: domain จริงของเว็บ
+- ถ้า domain ถูกสร้างผ่าน `Site Management` แล้ว ให้ตรวจว่า host อยู่ใน `sites.domains` และรอ `DomainCache` refresh หรือ restart backend
 
 #### รูปภาพไม่แสดง
 
@@ -244,8 +255,9 @@ npx nuxt prepare
 
 ตรวจสอบ:
 1. Backend กำลังรันอยู่ที่ URL ที่กำหนดใน `.env`
-2. Backend return JSON ตรงตาม format ใน `PORTFOLIO_FRONTEND_SPEC.md`
-3. ดู Console / Network tab ใน DevTools เพื่อดู error
+2. มี site type `portfolio` ที่ `domains` ตรงกับ host ปัจจุบัน
+3. Backend return JSON ตรงตาม format ใน `PORTFOLIO_FRONTEND_SPEC.md`
+4. ดู Console / Network tab ใน DevTools เพื่อดู error
 
 ---
 

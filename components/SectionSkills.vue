@@ -1,70 +1,54 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import type { SkillCategory } from '~/types/portfolio'
-
 const { skills } = usePortfolioData()
-
 const activeCategory = ref<SkillCategory | 'all'>('all')
-
 const categories: { key: SkillCategory | 'all'; label: string }[] = [
-  { key: 'all', label: 'All' },
+  { key: 'all', label: 'All tools' },
   { key: 'frontend', label: 'Frontend' },
   { key: 'backend', label: 'Backend' },
   { key: 'devops', label: 'DevOps' },
   { key: 'tools', label: 'Tools' },
 ]
-
-const filteredSkills = computed(() => {
-  if (activeCategory.value === 'all') return skills.value
-  return skills.value.filter(skill => skill.category === activeCategory.value)
-})
+const filteredSkills = computed(() =>
+  activeCategory.value === 'all'
+    ? skills.value
+    : skills.value.filter((skill) => skill.category === activeCategory.value),
+)
 </script>
-
 <template>
-  <section
-    id="skills"
-    class="section-padding bg-th-bg-alt"
-  >
+  <section id="skills" class="section-padding skills-section">
     <div class="section-container">
-      <div class="text-center mb-14">
-        <p class="text-th-accent font-mono text-sm tracking-wider mb-3">
-          Skills & Tools
-        </p>
-        <h2 class="text-3xl md:text-4xl font-bold text-th-fg">
-          Technologies I
-          <span class="gradient-text">work with</span>
-        </h2>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow section-index">03 / THE TOOLKIT</p>
+          <h2>Good ideas.<br /><em>The right tools.</em></h2>
+        </div>
+        <p>The technologies behind the experience.</p>
       </div>
-
-      <div class="flex flex-wrap items-center justify-center gap-2 mb-12">
+      <div class="filter-list" aria-label="Filter skills">
         <button
           v-for="cat in categories"
           :key="cat.key"
-          class="px-5 py-2 text-sm font-medium rounded-full transition-all duration-200"
-          :class="activeCategory === cat.key
-            ? 'bg-th-btn text-white shadow-lg shadow-th-btn/25'
-            : 'bg-th-overlay/5 text-th-muted hover:text-th-fg hover:bg-th-overlay/10 border border-th-edge/5'"
+          :class="{ active: activeCategory === cat.key }"
+          :aria-pressed="activeCategory === cat.key"
           @click="activeCategory = cat.key"
         >
           {{ cat.label }}
         </button>
       </div>
-
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        <div
-          v-for="skill in filteredSkills"
-          :key="skill.id"
-          class="glass-card p-5 flex flex-col items-center gap-3 hover:border-primary-500/30 hover:-translate-y-1 transition-all duration-300 group"
-        >
-          <Icon
-            :name="skill.icon"
-            size="36"
-            class="group-hover:scale-110 transition-transform duration-300"
-          />
-          <span class="text-sm text-th-body font-medium">
-            {{ skill.name }}
-          </span>
+      <div class="skills-grid">
+        <div v-for="skill in filteredSkills" :key="skill.id" class="skill-tile">
+          <Icon :name="skill.icon" size="30" />
+          <div>
+            <strong>{{ skill.name }}</strong
+            ><span>{{ skill.category }}</span>
+          </div>
+          <span class="skill-plus" aria-hidden="true">↗</span>
         </div>
       </div>
+      <p v-if="!filteredSkills.length" class="empty-state">
+        No tools in this category yet.
+      </p>
     </div>
   </section>
 </template>

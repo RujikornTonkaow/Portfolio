@@ -28,9 +28,11 @@ Frontend resolve site จาก hostname ก่อน แล้วดึงข�
 
 Frontend อ่าน `host` จาก URL ปัจจุบันด้วย Nuxt SSR/client runtime และส่งค่าแบบ exact match เช่น `localhost:3000` ถ้า backend เก็บ domain พร้อม port ใน `sites.domains`
 
+`sites.domains` ต้องเก็บเฉพาะ host ไม่มี protocol และไม่มี trailing slash เช่น `portfolio-nu-gray-57.vercel.app` ไม่ใช่ `https://portfolio-nu-gray-57.vercel.app/`
+
 ### CORS
 
-Backend ต้องอนุญาต origin ของ Portfolio Frontend (เช่น `http://localhost:3000` สำหรับ dev)
+Backend ต้องอนุญาต origin ของ Portfolio Frontend ผ่าน `DomainCache` ที่โหลดจาก `sites.domains` หรือ static allowlist สำหรับ origin ที่ไม่ได้อยู่ใน sites
 
 ---
 

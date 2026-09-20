@@ -246,6 +246,7 @@ NUXT_PUBLIC_API_BASE_URL=http://localhost:8080
 - `pending` และ `error` ถูก return ออกมาเพื่อให้ component แสดง loading/error state ได้
 - `SectionContact` ใช้ `error` เพื่อ disable form เมื่อ resolve site ไม่สำเร็จ
 - cache key ผูกกับ host เช่น `portfolio-data:localhost:3000` เพื่อไม่ให้ข้อมูลคนละ domain ปะปนกัน
+- host ต้องตรงกับ `sites.domains` ใน backend แบบ exact match และไม่ควรมี protocol เช่น `https://`
 
 **Return values:**
 
